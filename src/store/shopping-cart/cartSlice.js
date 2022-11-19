@@ -18,8 +18,6 @@ const initialState = {
   totalAmount: totalAmount,
 };
 
-// console.log(initialState);
-
 const setItemFunc = (item, totalAmount, totalQuantity) => {
   localStorage.setItem("cartItems", JSON.stringify(item));
   localStorage.setItem("totalAmount", JSON.stringify(totalAmount));
@@ -73,25 +71,38 @@ const cartSlice = createSlice({
         existingItem.totalPrice =
           Number(existingItem.totalPrice) - Number(existingItem.price);
       }
-      state.totalAmount = state.cartItems.reduce((total, item) => {
-        return total + Number(item.totalPrice);
-      }, 0);
-      setItemFunc([...state.cartItems], state.totalAmount, state.totalQuantity);
+
+      state.totalAmount = state.cartItems.reduce(
+        (total, item) => total + Number(item.price) * Number(item.quantity),
+        0
+      );
+
+      setItemFunc(
+        state.cartItems.map((item) => item),
+        state.totalAmount,
+        state.totalQuantity
+      );
     },
     // =============deleteItem=============
 
     deleteItem(state, action) {
-      const item = action.payload;
-      state.cartItems = state.cartItems.filter(
-        (newItem) => newItem.id !== item.id
+      const id = action.payload;
+      const existingItem = state.cartItems.find((item) => item.id === id);
+
+      if (existingItem) {
+        state.cartItems = state.cartItems.filter((item) => item.id !== id);
+        state.totalQuantity = state.totalQuantity - existingItem.quantity;
+      }
+
+      state.totalAmount = state.cartItems.reduce(
+        (total, item) => total + Number(item.price) * Number(item.quantity),
+        0
       );
-      state.totalQuantity = state.totalQuantity - item.quantity;
-
-      state.totalAmount = state.cartItems.reduce((total, item) => {
-        return total + Number(item.totalPrice);
-      }, 0);
-
-      setItemFunc([...state.cartItems], state.totalAmount, state.totalQuantity);
+      setItemFunc(
+        state.cartItems.map((item) => item),
+        state.totalAmount,
+        state.totalQuantity
+      );
     },
   },
 });

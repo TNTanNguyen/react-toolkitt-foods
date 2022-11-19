@@ -4,18 +4,23 @@ import { addItem, removeItem, deleteItem } from "store/shopping-cart/cartSlice";
 import "styles/cart-item.css";
 
 const CartItem = ({ item }) => {
-  const { title, image01, quantity, totalPrice } = item;
+  const { id,title,price, image01, quantity, totalPrice } = item;
 
   const dispatch = useDispatch();
 
   const handleIncrease = () => {
-    dispatch(addItem(item));
+    dispatch(addItem({
+      id,
+      title,
+      price,
+      image01,
+    }));
   };
   const handleDecrease = () => {
-    dispatch(removeItem(item.id));
+    dispatch(removeItem(id));
   };
   const handleDeleteItem = () => {
-    dispatch(deleteItem(item));
+    dispatch(deleteItem(id));
   };
   return (
     <ListGroupItem className="border-0 cart__item">

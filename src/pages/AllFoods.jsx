@@ -5,30 +5,30 @@ import CommonSection from "components/UI/common-section/CommonSection";
 import { useState } from "react";
 import { Col, Container, Row } from "reactstrap";
 
-import { useRef } from "react";
 import ReactPaginate from "react-paginate";
 
 import "../styles/all-foods.css";
 import "../styles/pagination.css";
 const AllFoods = (props) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [keySearchTemp, setKeySearchTemp] = useState("");
 
-  const typingTimeoutRef = useRef(null);
 
-  const handleSearchTerm = (e) => {
-    const value = e.target.value;
-    setKeySearchTemp(value);
+  // const handleSubmit = () => {
+  //   console.log(filters);
 
-    if (typingTimeoutRef.current) {
-      clearTimeout(typingTimeoutRef.current);
-    }
-    typingTimeoutRef.current = setTimeout(() => {
-      setSearchTerm(value);
-    }, 300);
-  };
+  //   const searchProductList =products.filter((item) => {
+  //     if (searchTerm === "") {
+  //       return item;
+  //     }
+  //     if (item.title.toLowerCase().includes(searchTerm.toLowerCase())) {
+  //       return item;
+  //     }
+  //     return null;
+  //   });
 
-  const searchedProductList = products.filter((item) => {
+  //   setFilterProductList(searchProductList);
+  // };
+  const searchProductList =products.filter((item) => {
     if (searchTerm === "") {
       return item;
     }
@@ -38,20 +38,84 @@ const AllFoods = (props) => {
     return null;
   });
 
+  const handleChangeSort = (e) => {
+    
+    // setFilters((pre) => ({
+    //   ...pre,
+    //   sortKey: value,
+    // }));
+    // console.log(filters);
+
+    // if (value === "ascending") {
+    //   // const sortedProductList = [...filterProductList].sort((a, b) =>
+    //   //   a.title.toLowerCase().localeCompare(b.title.toLowerCase())
+    //   // );
+    //   const sortedProductList = [...filterProductList].sort(function (a, b) {
+    //     if (a.title < b.title) {
+    //       return -1;
+    //     }
+    //     if (a.title > b.title) {
+    //       return 1;
+    //     }
+    //     return 0;
+    //   });
+
+    //   setFilterProductList(sortedProductList);
+    // }
+
+    // if (value === "descending") {
+    //   const sortedProductList = [...filterProductList].sort(function (a, b) {
+    //     if (a.title > b.title) {
+    //       return -1;
+    //     }
+    //     if (a.title < b.title) {
+    //       return 1;
+    //     }
+    //     return 0;
+    //   });
+    //   setFilterProductList(sortedProductList);
+    // }
+
+    // if (value === "high-price") {
+    //   const sortedProductList = [...filterProductList].sort(function (a, b) {
+    //     if (a.price > b.price) {
+    //       return -1;
+    //     }
+    //     if (a.price < b.price) {
+    //       return 1;
+    //     }
+    //     return 0;
+    //   });
+    //   setFilterProductList(sortedProductList);
+    // }
+    // if (value === "low-price") {
+    //   const sortedProductList = [...filterProductList].sort(function (a, b) {
+    //     if (a.price < b.price) {
+    //       return -1;
+    //     }
+    //     if (a.price > b.price) {
+    //       return 1;
+    //     }
+    //     return 0;
+    //   });
+    //   setFilterProductList(sortedProductList);
+    // }
+  };
+
   const [pageNumber, setPageNumber] = useState(0);
 
   const productPerPage = 8;
 
   const visitedPage = pageNumber * productPerPage;
-  const displayPage = searchedProductList.slice(
+
+  const displayPage = searchProductList.slice(
     visitedPage,
     visitedPage + productPerPage
   );
 
-  const pageCount = Math.ceil(searchedProductList.length / productPerPage);
+  const pageCount = Math.ceil(searchProductList.length / productPerPage);
 
   const changePage = ({ selected }) => {
-    console.log(selected);
     setPageNumber(selected);
   };
 
@@ -62,26 +126,30 @@ const AllFoods = (props) => {
         <Container>
           <Row>
             <Col lg="6" md="6" sm="6" xs="12">
-              <div className="search__widget d-flex align-items-center justify-content-between w-50">
+              <div className="search__widget d-flex align-items-center justify-content-between">
                 <input
                   type="text"
                   placeholder="I'm looking for...."
-                  value={keySearchTemp}
-                  onChange={handleSearchTerm}
+                  value={searchTerm}
+                 onChange={(e) => setSearchTerm(e.target.value)}
                 />
                 <span>
-                  <i className="ri-search-line"></i>
+                  <i className="ri-search-line" ></i>
                 </span>
               </div>
             </Col>
             <Col lg="6" md="6" sm="6" xs="12" className="mb-5">
               <div className="sorting__widget text-end">
-                <select className="w-50">
-                  <option>Default</option>
-                  <option value="ascending">Alphabetically, A-Z</option>
-                  <option value="descending">Alphabetically, Z-A</option>
-                  <option value="high-price">High Price</option>
-                  <option value="low-price">Low Price</option>
+                <select className="w-50" onChange={handleChangeSort}>
+                <option value="">
+                   Default
+                  </option>
+                  <option value="a-z">
+                    Alphabetically, A-Z
+                  </option>
+                  <option value="z-a">Alphabetically, Z-A</option>
+                  <option value="asc">High Price</option>
+                  <option value="desc">Low Price</option>
                 </select>
               </div>
             </Col>

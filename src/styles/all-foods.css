@@ -4,9 +4,11 @@
   border: 1px solid #fde4e4;
   border-radius: 5px;
   cursor: pointer;
+  background: transparent;
 }
 .search__widget input {
   border: none;
+  background-color: transparent;
 }
 
 .search__widget input:focus {
